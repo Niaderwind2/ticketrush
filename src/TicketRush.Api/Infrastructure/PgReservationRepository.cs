@@ -49,9 +49,21 @@ public sealed class PgReservationRepository(NpgsqlDataSource db) : IReservationR
         cmd.Parameters.AddWithValue(n.Tariff.ToString());
         cmd.Parameters.AddWithValue(n.PriceCents);
         cmd.Parameters.AddWithValue((object?)n.IdempotencyKey ?? DBNull.Value);
-        await using var r = await cmd.ExecuteReaderAsync();
-        await r.ReadAsync();
-        return Map(r);
+        try
+        {
+            await using var r = await cmd.ExecuteReaderAsync();
+            await r.ReadAsync();
+            return Map(r);
+        }
+        catch (PostgresException e) when (e.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            // Deux requêtes simultanées : la base a laissé passer la première et bloqué la seconde.
+            // Si c'est un double clic, la première requête a déjà créé la réservation : on la renvoie.
+            if (n.IdempotencyKey is not null
+                && await FindByIdempotencyKeyAsync(n.IdempotencyKey) is { } sameRequest)
+                return sameRequest;
+            throw new SeatAlreadyTakenException(n.SeatId);
+        }
     }
 
     public async Task UpdateStatusAsync(Guid id, ReservationStatus status)

@@ -71,6 +71,17 @@ public class ReservationServiceTests
     }
 
     [Fact]
+    public async Task Un_double_clic_arrive_pendant_la_creation_renvoie_la_reservation_du_premier_clic()
+    {
+        var first = Existing("alice", ReservationStatus.Held, Now) with { IdempotencyKey = "clic-2" };
+        _repo.FindActiveBySeatAsync(1).Returns(first);
+
+        var second = await _service.ReserveAsync(new ReserveCommand(1, 1, "alice", Tariff.Plein, "clic-2"));
+
+        Assert.Equal(first.Id, second.Id);
+    }
+
+    [Fact]
     public async Task Refuse_au_dela_du_quota()
     {
         _repo.CountActiveForCustomerAsync(1, "alice").Returns(6);

@@ -23,3 +23,12 @@ CREATE TABLE IF NOT EXISTS reservations (
   held_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
   idempotency_key  TEXT
 );
+
+-- Lab 1 (correction) : c'est la base qui garantit l'unicité, pas le code applicatif.
+-- Une place ne peut avoir qu'une seule réservation active à la fois.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_reservations_active_seat
+  ON reservations (seat_id) WHERE status IN ('Held', 'Paid');
+
+-- Une même clé d'idempotence (double clic) ne crée qu'une seule réservation.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_reservations_idempotency_key
+  ON reservations (idempotency_key) WHERE idempotency_key IS NOT NULL;

@@ -20,6 +20,9 @@ public sealed class ReservationService(IReservationRepository repo, IPaymentGate
         Quota.Check(alreadyHeld, 1);
 
         var current = await repo.FindActiveBySeatAsync(cmd.SeatId);
+        // Le premier clic d'un double clic a pu créer la réservation entre-temps.
+        if (current is not null && cmd.IdempotencyKey is not null && current.IdempotencyKey == cmd.IdempotencyKey)
+            return current;
         if (current is not null && !IsExpired(current))
             throw new SeatAlreadyTakenException(cmd.SeatId);
         if (current is not null)
