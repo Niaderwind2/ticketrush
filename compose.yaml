@@ -1,0 +1,38 @@
+# Lance TicketRush complet : base, API, faux prestataire de paiement.
+#   docker compose up -d --build
+# L'API répond sur http://localhost:8080
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ticketrush
+      POSTGRES_PASSWORD: ticketrush
+      POSTGRES_DB: ticketrush
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ticketrush"]
+      interval: 2s
+      retries: 20
+
+  payment:
+    build: { context: ., target: payment }
+
+  api:
+    build: { context: ., target: api }
+    environment:
+      ConnectionStrings__TicketRush: Host=db;Username=ticketrush;Password=ticketrush;Database=ticketrush;Maximum Pool Size=100
+      Payment__BaseUrl: http://payment:8080
+    ports: ["8080:8080"]
+    depends_on:
+      db: { condition: service_healthy }
+      payment: { condition: service_started }
+
+  # Test de charge : simule l'ouverture des ventes.
+  #   docker compose run --rm k6
+  k6:
+    image: grafana/k6:latest
+    profiles: ["charge"]
+    volumes: ["./k6:/scripts:ro"]
+    environment:
+      BASE_URL: http://api:8080
+    command: run /scripts/ouverture-ventes.js
+    depends_on: [api]
