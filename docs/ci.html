@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI et agent IA · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html" aria-current="page">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Après-midi · 15h10-15h30 · démonstration</p>
+<h1>Un agent IA arrêté par la CI</h1>
+<p class="lead">On demande à un agent de code d'ajouter une fonctionnalité. Le code a l'air correct. Qui l'empêche de casser la production ? Les tests, à condition qu'ils soient au bon étage.</p>
+
+<h2>La CI de TicketRush</h2>
+<div class="table-wrap"><table>
+<tr><th>Étage</th><th>Quand</th><th>Budget</th><th>Bloque le merge ?</th></tr>
+<tr><td><strong>1. Tests unitaires</strong></td><td>À chaque push</td><td>&lt; 2 min</td><td>Oui</td></tr>
+<tr><td><strong>2. Tests d'intégration</strong> (PostgreSQL dans un conteneur)</td><td>À chaque push et en pull request</td><td>&lt; 5 min</td><td>Oui</td></tr>
+<tr><td><strong>3. Mutation testing</strong></td><td>Chaque nuit, ou à la demande</td><td>&lt; 30 min</td><td>Non : alerte et rapport</td></tr>
+</table></div>
+<p>Le fichier : <code>.github/workflows/ci.yml</code> dans le dépôt.</p>
+
+<h2>La démo</h2>
+<p>La demande faite à l'agent : <em>« Pendant l'ouverture des ventes, la base est saturée. Le calcul du quota fait une requête SQL à chaque réservation : optimise-le. »</em></p>
+<ol>
+<li>L'agent ajoute un <strong>cache en mémoire</strong> de 5 minutes sur le nombre de billets de chaque client. C'est une optimisation classique, et le code est propre.</li>
+<li>Il lance les tests unitaires : <strong>tout est vert</strong>. Normal, ils utilisent un mock du repository.</li>
+<li>La pull request déclenche la CI. L'étage 2 <strong>échoue</strong> sur <code>Le_quota_de_6_billets_tient_quand_les_requetes_arrivent_sur_deux_instances</code> : avec deux instances de l'API, chacune a son propre cache, et un client obtient un septième billet.</li>
+<li>On lit l'échec ensemble. Le test d'intégration a joué le rôle de la règle que l'agent ne connaissait pas : <strong>en production, l'API tourne sur plusieurs instances</strong>.</li>
+</ol>
+<p>La branche <code>demo-agent</code> du dépôt contient ce changement, et sa pull request montre la CI en échec.</p>
+
+<h2>Discussion</h2>
+<ul>
+<li>Quels tests doivent bloquer le merge ? Lesquels peuvent tourner la nuit ?</li>
+<li>Si votre pipeline dure 25 minutes, que font les développeurs ? Et un agent ?</li>
+<li>Quand un agent écrit le code et les tests, qui écrit les tests qui jugent l'agent ?</li>
+</ul>
+<div class="callout"><p><strong>Les tests sont la spécification exécutable.</strong> Un agent IA ne connaît pas vos règles métier ni vos incidents passés. Vos tests, si.</p></div>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>

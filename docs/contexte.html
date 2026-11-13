@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TicketRush, le cas · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html" aria-current="page">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Cas d'étude · à lire avant l'atelier</p>
+<h1>TicketRush</h1>
+<p class="lead">Une billetterie de concerts en ligne, fictive. Une équipe de 6 développeurs, une mise en production par semaine, et une ouverture des ventes qui fait peur à tout le monde.</p>
+
+<h2 id="metier">Le métier</h2>
+<ul>
+<li>Un concert a des places numérotées en trois catégories : <strong>fosse</strong> (65 €), <strong>catégorie 1</strong> (89 €), <strong>catégorie 2</strong> (49 €).</li>
+<li>Tarifs : <strong>plein</strong>, <strong>réduit</strong> (-20 %, étudiant ou demandeur d'emploi), <strong>enfant</strong> (-50 %, moins de 12 ans, <em>interdit en fosse</em>).</li>
+<li>Frais de service : 1,50 € par billet, <strong>plafonnés à 6 €</strong> par commande, jamais remisés.</li>
+<li>« Early bird » : -10 % sur le sous-total si l'achat a lieu <strong>au moins 30 jours</strong> avant le concert.</li>
+<li><strong>Quota</strong> : 6 billets maximum par personne et par concert, pour limiter la revente.</li>
+<li>Une place réservée est <strong>bloquée 10 minutes</strong> pendant le paiement. Au-delà, elle est remise en vente.</li>
+<li>Un client qui double-clique ne doit avoir qu'<strong>une seule réservation</strong> (clé d'idempotence).</li>
+</ul>
+
+<h2>L'architecture</h2>
+<pre><code>  Navigateur / appli mobile
+          │  HTTPS
+          ▼
+  ┌───────────────────┐       ┌──────────────────────────┐
+  │   API TicketRush  │──────▶│ Prestataire de paiement  │  (externe, pas
+  │   (.NET 10)       │ HTTP  │  POST /v1/charges        │   d'environnement
+  └─────────┬─────────┘       └──────────────────────────┘   de test fiable)
+            │ SQL
+            ▼
+  ┌───────────────────┐       ┌──────────────────────────┐
+  │   PostgreSQL      │       │ Envoi des e-billets      │  (événement publié
+  └───────────────────┘       └──────────────────────────┘   après paiement)</code></pre>
+
+<h2>Les contraintes</h2>
+<div class="table-wrap"><table>
+<tr><th>Sujet</th><th>Contrainte</th></tr>
+<tr><td>Charge</td><td>À l'ouverture des ventes d'un gros concert : 20 000 personnes en 5 minutes. Le reste du temps, quelques dizaines de requêtes par minute.</td></tr>
+<tr><td>Performance</td><td>95 % des réservations en moins de 500 ms, même pendant le pic.</td></tr>
+<tr><td>Argent</td><td>Un client débité sans billet, c'est un appel au support, un remboursement manuel et un avis négatif.</td></tr>
+<tr><td>Données</td><td>Noms, e-mails, historiques d'achat : données personnelles soumises au RGPD.</td></tr>
+<tr><td>Équipe</td><td>6 développeurs, pas de testeur dédié, une mise en production par semaine.</td></tr>
+<tr><td>CI</td><td>Le pipeline actuel lance les tests unitaires. 16 tests unitaires, tous verts.</td></tr>
+</table></div>
+
+<h2>L'API</h2>
+<div class="table-wrap"><table>
+<tr><th>Méthode</th><th>URL</th><th>Corps</th><th>Réponses</th></tr>
+<tr><td><code>POST</code></td><td><code>/events/1/reservations</code><br><small>en-tête facultatif <code>Idempotency-Key</code></small></td><td><code>{"seatId": 12, "customerId": "alice", "tariff": "Plein"}</code></td><td>201 créée · 409 place prise · 422 quota · 404 place inconnue</td></tr>
+<tr><td><code>POST</code></td><td><code>/reservations/{id}/pay</code></td><td>—</td><td>200 payée · 409 expirée · 402 refusée</td></tr>
+<tr><td><code>GET</code></td><td><code>/admin/stats</code></td><td>—</td><td>compteurs de la démo</td></tr>
+<tr><td><code>POST</code></td><td><code>/admin/reset</code></td><td>—</td><td>remet toutes les places en vente</td></tr>
+</table></div>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>

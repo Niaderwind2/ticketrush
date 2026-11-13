@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 2 : le tournoi des mutants · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html" aria-current="page">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Après-midi · 14h10-15h00 · en binôme · <span class="ia ia-2">IA 2 · assistant</span></p>
+<h1>Lab 2 : le tournoi des mutants</h1>
+<p class="lead">L'IA écrit des tests en quelques secondes. La couverture grimpe. Mais ces tests détectent-ils vraiment une erreur ? Le mutation testing répond : il introduit des bugs dans le code et regarde si vos tests les voient.</p>
+
+<h2>Le principe</h2>
+<p>Stryker modifie le code, une petite erreur à la fois : un <code>&gt;=</code> devient <code>&gt;</code>, un <code>+</code> devient <code>-</code>, une constante change. Chaque version modifiée est un <strong>mutant</strong>.</p>
+<ul>
+<li>Si un test échoue, le mutant est <strong>tué</strong> : vos tests ont vu l'erreur.</li>
+<li>Si tous les tests passent, le mutant <strong>survit</strong> : vos tests n'auraient pas vu ce bug.</li>
+</ul>
+<p>Le <strong>score de mutation</strong> est la part de mutants tués. C'est une mesure bien plus honnête que la couverture.</p>
+
+<h2>1. Mesurer le point de départ (5 min)</h2>
+<p>Le module <code>src/TicketRush.Domain/Pricing.cs</code> calcule les prix. Il n'a qu'un test, qui passe.</p>
+<pre><code>cd tests/TicketRush.UnitTests
+dotnet tool restore
+dotnet stryker</code></pre>
+<p>Notez le score affiché pour <code>Pricing.cs</code>, puis ouvrez le rapport HTML : chaque mutant survivant y est montré dans le code.</p>
+
+<h2>2. Faire écrire les tests par l'IA (10 min) <span class="ia ia-2">IA 2 · assistant</span></h2>
+<p>Donnez <code>Pricing.cs</code> à votre assistant et demandez-lui des tests xUnit. Collez-les dans <code>PricingTests.cs</code>, vérifiez qu'ils passent, puis relancez Stryker.</p>
+<p>Annoncez votre score au formateur : il est reporté au tableau.</p>
+
+<h2>3. Le tournoi (25 min)</h2>
+<p>Objectif : tuer le plus de mutants survivants possible. À la main, ou en guidant l'IA avec le rapport Stryker. Pour chaque mutant tué, notez dans un fichier <code>notes.md</code> :</p>
+<ul>
+<li>le mutant (ligne, modification) ;</li>
+<li>pourquoi le test de l'IA ne le voyait pas ;</li>
+<li>ce que l'IA ne pouvait pas savoir sans vous (une règle métier, une frontière).</li>
+</ul>
+<p>Rappel des règles métier : <a href="contexte.html#metier">contexte TicketRush</a>.</p>
+
+<div class="palier avance">
+<h3>Palier avancé · Les frontières</h3>
+<p>Le early bird commence-t-il à 30 jours pile, ou au-delà ? Les frais à 4 billets sont-ils de 6 € ou plafonnés ? Écrivez un test par frontière, avec la valeur exacte attendue.</p>
+</div>
+<div class="palier expert">
+<h3>Palier expert · Les mutants qu'il vaut mieux laisser vivre</h3>
+<p>Certains mutants survivants ne valent pas un test : le texte d'un message d'erreur, par exemple. Lesquels ? Configurez Stryker pour les ignorer (<code>stryker-config.json</code>) et justifiez ce choix comme vous le feriez dans une stratégie de test.</p>
+</div>
+
+<h2>4. Débrief (5 min)</h2>
+<p>Les trois meilleurs scores expliquent leur méthode en deux minutes. À titre de repère, la branche <code>lab-2-solution</code> atteint 87,5 % : les seuls mutants survivants modifient des messages d'erreur.</p>
+<div class="callout ok"><p><strong>À retenir :</strong> la couverture dit quelles lignes ont été exécutées, pas ce qui a été vérifié. Un test sans assertion précise couvre tout et ne prouve rien. Quand l'IA écrit vos tests, le mutation testing devient votre contrôle qualité.</p></div>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>

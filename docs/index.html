@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accueil · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html" aria-current="page">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">INF243 · MAALSI A2</p>
+<h1>Stratégie de tests</h1>
+<p class="lead">Quand l'IA écrit une partie du code, les tests deviennent la spécification et le garde-fou. Aujourd'hui, on apprend à décider quoi tester, à quel niveau, et à prouver que nos tests servent à quelque chose.</p>
+
+<div class="callout">
+<p><strong>Le point de départ.</strong> TicketRush a 16 tests unitaires, tous verts. Le jour de l'ouverture des ventes, 25 places sont vendues deux fois et des clients qui ont double-cliqué se retrouvent avec deux réservations. Comment est-ce possible ?</p>
+</div>
+
+<h2>Ce que vous saurez faire ce soir</h2>
+<div class="grid">
+<div class="card accent"><h3>Partir des risques</h3><p>Construire une stratégie de test à partir des risques et des attributs de qualité, sans appliquer la pyramide par réflexe.</p></div>
+<div class="card accent"><h3>Choisir le bon test</h3><p>Choisir le type, le niveau et la doublure (mock, fake, vraie base en conteneur), et justifier ce choix.</p></div>
+<div class="card accent"><h3>Mesurer la qualité des tests</h3><p>Juger des tests écrits par une IA (ou par vous) avec le mutation testing plutôt qu'avec la couverture.</p></div>
+<div class="card accent"><h3>Automatiser</h3><p>Placer chaque test dans le bon étage du pipeline CI/CD, avec un budget de temps.</p></div>
+<div class="card accent"><h3>Rédiger</h3><p>Écrire une stratégie et un plan de test avec une trame que vous réutiliserez pour Good Food.</p></div>
+</div>
+
+<h2>La journée</h2>
+<div class="table-wrap"><table>
+<tr><th>Horaire</th><th>Séquence</th><th>IA</th></tr>
+<tr><td class="time">8h30</td><td><strong>Panne en direct</strong> : l'ouverture des ventes de TicketRush</td><td>—</td></tr>
+<tr><td class="time">8h45</td><td>Auto-positionnement (Wooclap)</td><td>—</td></tr>
+<tr><td class="time">8h50</td><td><a href="matin.html#debat">Débat mouvant</a> : cinq affirmations à trancher</td><td><span class="ia ia-0">IA 0 · sans IA</span></td></tr>
+<tr><td class="time">9h30</td><td><a href="matin.html#apport">Apport flash</a> : politique, stratégie, plan ; types de tests et ISO 25010 ; modèles</td><td>—</td></tr>
+<tr><td class="time">10h00</td><td><a href="matin.html#atelier">Atelier risques sous contrainte</a></td><td><span class="ia ia-0">IA 0 · sans IA</span> puis <span class="ia ia-2">IA 2 · assistant</span></td></tr>
+<tr><td class="time">11h05</td><td><a href="matin.html#stagiaire">L'IA comme stagiaire</a> : auditer une stratégie générée</td><td><span class="ia ia-3">IA 3 · libre</span></td></tr>
+<tr><td class="time">11h25</td><td><a href="matin.html#revue">Revue croisée</a> : défendre trois choix</td><td><span class="ia ia-0">IA 0 · sans IA</span></td></tr>
+<tr><td class="time">13h10</td><td><a href="lab-1.html">Lab 1</a> : ce que le mock ne voit pas, corrigé en TDD</td><td><span class="ia ia-1">IA 1 · explicative</span></td></tr>
+<tr><td class="time">14h10</td><td><a href="lab-2.html">Lab 2</a> : le tournoi des mutants</td><td><span class="ia ia-2">IA 2 · assistant</span></td></tr>
+<tr><td class="time">15h10</td><td><a href="ci.html">Démo</a> : un agent IA arrêté par la CI</td><td>—</td></tr>
+<tr><td class="time">15h30</td><td><a href="trame.html">Rédaction</a> : stratégie et plan de test de TicketRush</td><td><span class="ia ia-2">IA 2 · assistant</span></td></tr>
+<tr><td class="time">16h10</td><td>Transfert vers votre entreprise, retour à chaud</td><td><span class="ia ia-0">IA 0 · sans IA</span></td></tr>
+</table></div>
+
+<h2>Les niveaux d'IA</h2>
+<p>Chaque activité annonce son niveau. Une seule règle : <strong>vous devez pouvoir expliquer tout ce que vous présentez ou commitez.</strong></p>
+<div class="table-wrap"><table>
+<tr><td><span class="ia ia-0">IA 0 · sans IA</span></td><td>Construire sa propre représentation : réfléchir, débattre, identifier des risques. On ne fait pas de la musculation avec un chariot élévateur.</td></tr>
+<tr><td><span class="ia ia-1">IA 1 · explicative</span></td><td>L'IA explique, donne des indices, relit. Elle n'écrit pas le code demandé.</td></tr>
+<tr><td><span class="ia ia-2">IA 2 · assistant</span></td><td>L'IA peut générer du code. Vous le relisez, le testez, et pouvez le refaire à la main.</td></tr>
+<tr><td><span class="ia ia-3">IA 3 · libre</span></td><td>Usage libre. On évalue le résultat, la démarche et votre capacité à expliquer.</td></tr>
+</table></div>
+
+<h2>Le dépôt</h2>
+<p>Tout le code est dans le dépôt <a href="https://github.com/Niaderwind2/ticketrush">Niaderwind2/ticketrush</a>. Deux pistes, au choix :</p>
+<div class="grid">
+<div class="card"><h3>Piste code (C#)</h3><p>SDK .NET 10 et Docker. Vous modifiez le code et ses tests : xUnit, NSubstitute, Testcontainers, Stryker.NET.</p></div>
+<div class="card"><h3>Piste boîte noire</h3><p>Docker seulement. Vous testez l'API HTTP dans le langage de votre choix : k6, Python, Java, Bash...</p></div>
+</div>
+<p>Les solutions sont dans les branches <code>lab-1-solution</code> et <code>lab-2-solution</code>. Les regarder avant d'avoir cherché, c'est se priver de l'entraînement.</p>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>
