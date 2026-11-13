@@ -1,0 +1,45 @@
+# CI à trois étages : chaque étage a son budget de temps et son rôle.
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 2 * * *"   # mutation testing chaque nuit
+  workflow_dispatch:
+
+jobs:
+  unitaires:
+    name: 1. Tests unitaires (à chaque push, < 2 min)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "10.0.x" }
+      - run: dotnet test tests/TicketRush.UnitTests --logger "console;verbosity=normal"
+
+  integration:
+    name: 2. Tests d'intégration avec PostgreSQL (bloque le merge)
+    needs: unitaires
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "10.0.x" }
+      - run: dotnet test tests/TicketRush.IntegrationTests --logger "console;verbosity=normal"
+
+  mutation:
+    name: 3. Mutation testing (la nuit, ou à la demande)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "10.0.x" }
+      - run: dotnet tool restore
+      - run: dotnet stryker --reporter html --reporter cleartext
+        working-directory: tests/TicketRush.UnitTests
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rapport-mutation
+          path: tests/TicketRush.UnitTests/StrykerOutput/**/reports/*.html
