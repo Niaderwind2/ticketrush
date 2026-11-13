@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche mémo · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html" aria-current="page">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">À garder sous la main</p>
+<h1>Fiche mémo</h1>
+<p class="lead">L'essentiel de la journée sur une page. Elle s'imprime proprement.</p>
+
+<div class="grid">
+<div class="card"><h3>Trois niveaux de décision</h3>
+<p><strong>Politique</strong> : l'entreprise, pourquoi on teste.<br><strong>Stratégie</strong> : le projet, quoi et comment.<br><strong>Plan</strong> : une version, qui, quand, critères de sortie.</p></div>
+<div class="card"><h3>Une stratégie se construit à partir...</h3>
+<p>... des <strong>risques</strong> (probabilité × impact), des <strong>caractéristiques de qualité</strong> (ISO 25010) et des <strong>contraintes</strong> (temps, équipe, environnements). La forme (pyramide, trophée, honeycomb) en découle.</p></div>
+<div class="card"><h3>Doublures</h3>
+<p><strong>Stub</strong> : renvoie une réponse. <strong>Mock</strong> : vérifie un appel. <strong>Fake</strong> : implémentation simplifiée. <strong>Conteneur</strong> : la vraie dépendance. Un mock ne prouve que votre hypothèse.</p></div>
+<div class="card"><h3>TDD</h3>
+<p><strong>Rouge</strong> : un test qui échoue et prouve le problème. <strong>Vert</strong> : la correction minimale. <strong>Refactor</strong> : on nettoie, les tests protègent.</p></div>
+<div class="card"><h3>Couverture et mutation</h3>
+<p>La <strong>couverture</strong> dit ce qui a été exécuté. Le <strong>score de mutation</strong> dit ce qui a été vérifié. Les frontières et les valeurs exactes tuent les mutants.</p></div>
+<div class="card"><h3>CI à étages</h3>
+<p>Rapide et fiable à chaque push. Intégration avant le merge. Long (mutation, charge) la nuit. Un pipeline trop long est contourné.</p></div>
+<div class="card"><h3>Tests et IA</h3>
+<p>L'IA écrit vite des tests qui passent. À vous de vérifier qu'ils <strong>prouvent</strong> quelque chose. Quand un agent écrit le code, vos tests sont sa spécification.</p></div>
+<div class="card"><h3>Outils actuels</h3>
+<p>Unitaires : xUnit, JUnit, Vitest, pytest. Intégration : Testcontainers. Contrats : Pact. E2E : Playwright. Charge : k6. Mutation : Stryker, PIT. Pannes : Toxiproxy.</p></div>
+</div>
+
+<h2>Prompt de tuteur IA (niveau 1)</h2>
+<p>Pour celles et ceux qui découvrent les tests. Collez-le au début d'une conversation avec votre assistant :</p>
+<pre><code>Tu es mon tuteur pour un cours sur les tests logiciels. Je découvre le sujet.
+Règles :
+- N'écris jamais le code de test à ma place, même si je le demande.
+- Explique les notions avec des exemples courts, puis pose-moi une question pour vérifier que j'ai compris.
+- Si je te montre du code, aide-moi à le lire ligne par ligne et à trouver moi-même ce qui manque.
+- Si je bloque, donne un indice à la fois, du plus vague au plus précis.
+Le projet s'appelle TicketRush, une billetterie en C# avec xUnit, NSubstitute et Testcontainers.</code></pre>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trame de stratégie et de plan · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html" aria-current="page">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Après-midi · 15h30-16h10 · en équipe · <span class="ia ia-2">IA 2 · assistant</span></p>
+<h1>Trame de stratégie et de plan de test</h1>
+<p class="lead">Remplissez-la pour TicketRush avec votre carte de contraintes, votre matrice du matin et vos constats des labs. C'est la même trame que vous utiliserez, seuls, pour Good Food et vos autres projets.</p>
+<div class="callout"><p>Deux à trois pages. Chaque choix est <strong>justifié</strong> par un risque ou une contrainte. Une stratégie qui liste des outils sans dire pourquoi n'est pas une stratégie.</p></div>
+
+<h2>Partie 1 · Stratégie de test (vaut pour tout le projet)</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Section</th><th>Ce qu'on attend</th></tr>
+<tr><td>1</td><td><strong>Contexte et périmètre</strong></td><td>Le système, son architecture, ses contraintes (charge, SLA, réglementation, équipe, rythme de livraison). Le rattachement à la politique de test de l'entreprise, s'il y en a une.</td></tr>
+<tr><td>2</td><td><strong>Risques majeurs</strong></td><td>5 à 10 risques cotés (probabilité × impact), chacun relié à une caractéristique ISO 25010.</td></tr>
+<tr><td>3</td><td><strong>Forme de la stratégie</strong></td><td>Pyramide, trophée, honeycomb ou autre, et pourquoi cette forme pour <em>cette</em> architecture.</td></tr>
+<tr><td>4</td><td><strong>Types et niveaux de test</strong></td><td>Pour chacun : ce qu'il couvre, l'outil, qui l'écrit et le maintient.</td></tr>
+<tr><td>5</td><td><strong>Doublures et environnements</strong></td><td>Ce qui est simulé, ce qui tourne vraiment en conteneur, ce qui reste en environnement partagé.</td></tr>
+<tr><td>6</td><td><strong>Données de test</strong></td><td>Origine, anonymisation, réinitialisation entre deux exécutions.</td></tr>
+<tr><td>7</td><td><strong>Outillage et critères de choix</strong></td><td>Pourquoi ces outils : maturité, intégration CI, compétences de l'équipe, coût.</td></tr>
+<tr><td>8</td><td><strong>Intégration CI/CD</strong></td><td>Les étages, leur durée cible, ce qui bloque le merge, ce qui tourne la nuit. <strong>Avec un schéma du processus de test.</strong></td></tr>
+<tr><td>9</td><td><strong>Indicateurs</strong></td><td>Score de mutation, taux de tests instables, durée du pipeline, défauts échappés en production. La couverture est suivie, mais ce n'est pas une cible.</td></tr>
+<tr><td>10</td><td><strong>Ce qu'on ne teste pas, et pourquoi</strong></td><td>Les risques acceptés explicitement.</td></tr>
+</table></div>
+
+<h2>Partie 2 · Plan de test d'une version (annexe)</h2>
+<div class="table-wrap"><table>
+<tr><th>Section</th><th>Ce qu'on attend</th></tr>
+<tr><td><strong>Périmètre</strong></td><td>Ce qui change dans cette version, et ce qui est touché indirectement.</td></tr>
+<tr><td><strong>Tests prévus</strong></td><td>Nouveaux tests, tests de non-régression à rejouer, tests manuels éventuels.</td></tr>
+<tr><td><strong>Environnements</strong></td><td>Où et avec quelles données.</td></tr>
+<tr><td><strong>Planning et responsables</strong></td><td>Qui fait quoi, quand.</td></tr>
+<tr><td><strong>Critères d'entrée</strong></td><td>Ce qui doit être vrai pour commencer à tester (build vert, environnement prêt...).</td></tr>
+<tr><td><strong>Critères de sortie</strong></td><td>Ce qui doit être vrai pour livrer (tous les tests bloquants verts, aucun défaut critique ouvert...).</td></tr>
+<tr><td><strong>Gestion des anomalies</strong></td><td>Comment un défaut est signalé, priorisé et suivi.</td></tr>
+</table></div>
+
+<h2>Pour aller plus loin, avec votre entreprise</h2>
+<p>Avant de partir, écrivez sur votre fiche de transfert :</p>
+<ul>
+<li><strong>Une action concrète</strong> à proposer sur le SI de votre entreprise dans le mois qui vient.</li>
+<li><strong>Un argument pour le grand oral</strong> : comment vous justifieriez la stratégie de test de votre projet devant un jury.</li>
+</ul>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>
