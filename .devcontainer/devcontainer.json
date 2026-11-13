@@ -1,0 +1,15 @@
+{
+  // Solution de repli : tout l'environnement du cours dans GitHub Codespaces (bouton « Code » > « Codespaces »).
+  "name": "TicketRush",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "postCreateCommand": "dotnet tool restore && dotnet restore && pip install requests",
+  "forwardPorts": [8080],
+  "customizations": {
+    "vscode": { "extensions": ["ms-dotnettools.csdevkit"] }
+  },
+  "hostRequirements": { "cpus": 4 }
+}
