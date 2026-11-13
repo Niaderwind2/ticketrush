@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 1 : ce que le mock ne voit pas · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html">Matin</a>
+<a href="lab-1.html" aria-current="page">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Après-midi · 13h10-14h10 · en binôme · <span class="ia ia-1">IA 1 · explicative</span></p>
+<h1>Lab 1 : ce que le mock ne voit pas</h1>
+<p class="lead">Les tests du service de réservation passent tous. Ils utilisent des mocks. On va montrer qu'ils ne peuvent pas voir la double vente, la prouver avec un vrai PostgreSQL, puis la corriger en TDD.</p>
+
+<div class="callout"><p><strong>Objectif :</strong> un test qui échoue tant que deux clients peuvent obtenir la même place, et qui passe une fois le défaut corrigé. Choisissez votre piste : <strong>code</strong> (C#) ou <strong>boîte noire</strong> (n'importe quel langage).</p></div>
+
+<h2>Préparation (5 min)</h2>
+<pre><code>git pull
+docker compose up -d --build --wait     # l'API répond sur http://localhost:8080
+dotnet test                             # piste code : tout est vert</code></pre>
+
+<h2>Piste code (C#)</h2>
+
+<div class="palier base">
+<h3>Socle · 1. Lire les tests existants (10 min)</h3>
+<p>Ouvrez <code>tests/TicketRush.UnitTests/ReservationServiceTests.cs</code>. Tous les tests passent.</p>
+<ul>
+<li>Que remplace <code>Substitute.For&lt;IReservationRepository&gt;()</code> ?</li>
+<li>Dans <code>Refuse_une_place_deja_reservee</code>, qui décide que la place est prise : le code, ou le test ?</li>
+<li>Écrivez en une phrase ce que ces tests <strong>ne peuvent pas</strong> voir.</li>
+</ul>
+</div>
+
+<div class="palier base">
+<h3>Socle · 2. Rouge : écrire le test qui prouve la double vente (20 min)</h3>
+<p>Créez <code>tests/TicketRush.IntegrationTests/ConcurrencyTests.cs</code>. Inspirez-vous de <code>ReservationRepositoryTests.cs</code> : la classe <code>PostgresFixture</code> démarre un vrai PostgreSQL dans Docker.</p>
+<p>Le test : 20 clients réservent la <strong>même place</strong> en même temps. Attendu : 1 succès, 19 <code>SeatAlreadyTakenException</code>.</p>
+<pre><code>[Fact]
+public async Task Vingt_clients_sur_la_meme_place_une_seule_reservation_reussit()
+{
+    var service = new ReservationService(
+        new PgReservationRepository(pg.DataSource),
+        Substitute.For&lt;IPaymentGateway&gt;(),
+        TimeProvider.System);
+
+    var attempts = Enumerable.Range(1, 20)
+        .Select(i =&gt; Task.Run(() =&gt; service.ReserveAsync(
+            new ReserveCommand(pg.EventId, 100, $"client-{i}", Tariff.Plein))))
+        .ToArray();
+    await Task.WhenAll(attempts.Select(t =&gt; t.ContinueWith(_ =&gt; { })));
+
+    Assert.Equal(1, attempts.Count(t =&gt; t.IsCompletedSuccessfully));
+}</code></pre>
+<p>Lancez-le plusieurs fois avec <code>dotnet test tests/TicketRush.IntegrationTests</code>. Il doit être <strong>rouge</strong>. S'il est parfois vert, notez-le : c'est le palier avancé.</p>
+</div>
+
+<div class="palier base">
+<h3>Socle · 3. Vert : corriger (20 min)</h3>
+<p>Le service fait « je vérifie que la place est libre, puis j'insère ». Entre les deux, un autre client peut passer. Où placer la garantie d'unicité pour qu'elle tienne quelle que soit la concurrence ?</p>
+<p>Indices progressifs, à ouvrir seulement si vous bloquez plus de 10 minutes :</p>
+<details><summary>Indice 1</summary><p>Le code applicatif ne peut pas garantir l'unicité seul : plusieurs instances de l'API peuvent tourner en même temps. Qui voit toutes les requêtes ?</p></details>
+<details><summary>Indice 2</summary><p>PostgreSQL sait garantir l'unicité avec un index unique. Il peut même être <em>partiel</em> : uniquement sur les réservations actives (<code>WHERE status IN ('Held', 'Paid')</code>).</p></details>
+<details><summary>Indice 3</summary><p>Ajoutez l'index dans <code>schema.sql</code>, puis interceptez l'erreur <code>PostgresErrorCodes.UniqueViolation</code> dans <code>PgReservationRepository.InsertAsync</code> pour la traduire en <code>SeatAlreadyTakenException</code>.</p></details>
+</div>
+
+<div class="palier base">
+<h3>Socle · 4. Refactor et bilan (5 min)</h3>
+<p>Tous les tests sont verts ? Relisez votre correction. Puis répondez : <strong>quel test aurait dû exister dès le départ, et à quel étage du pipeline ?</strong></p>
+</div>
+
+<div class="palier avance">
+<h3>Palier avancé · Rendre le test fiable</h3>
+<p>Un bug de concurrence ne se montre pas à chaque exécution. Votre test est-il rouge à <em>chaque</em> fois avant la correction ? Rendez-le fiable : libérez tous les clients au même instant (une barrière avec <code>TaskCompletionSource</code>), et répétez l'expérience sur plusieurs places (<code>[Theory]</code>). Puis faites la même chose pour le <strong>double clic</strong> : 5 requêtes simultanées avec la même clé d'idempotence ne doivent créer qu'une réservation.</p>
+</div>
+
+<div class="palier expert">
+<h3>Palier expert · Tests par propriétés</h3>
+<p>Ajoutez FsCheck (<code>dotnet add tests/TicketRush.UnitTests package FsCheck.Xunit</code>) et écrivez des propriétés sur <code>Pricing</code> : « le total n'est jamais négatif », « les frais ne dépassent jamais 6 € », « ajouter un billet n'a jamais fait baisser le total ». Comparez avec des tests par exemples : qu'est-ce que chaque approche trouve que l'autre ne trouve pas ?</p>
+</div>
+
+<h2>Piste boîte noire (tous langages)</h2>
+<p>Même objectif, sans toucher au C# : prouvez la double vente par l'API HTTP.</p>
+<div class="palier base">
+<h3>Socle · Écrire le test de double vente</h3>
+<p>Lancez 20 requêtes <code>POST /events/1/reservations</code> <strong>au même instant</strong> sur la même place, puis comptez les réponses 201. Attendu : exactement une.</p>
+<p>Deux exemples complets sont fournis, à lire puis à réécrire dans votre langage :</p>
+<pre><code>docker compose --profile charge run --rm k6 run /scripts/double-vente.js
+python boite-noire/double_vente.py</code></pre>
+</div>
+<div class="palier avance">
+<h3>Palier avancé · Le double clic</h3>
+<p>Envoyez 5 requêtes simultanées avec le même en-tête <code>Idempotency-Key</code>. Combien de réservations sont créées ? Vérifiez avec <code>GET /admin/stats</code>.</p>
+</div>
+<div class="palier expert">
+<h3>Palier expert · Relire la correction</h3>
+<p>Faites équipe avec un binôme de la piste code : relisez sa correction et vérifiez que <strong>votre</strong> test passe dessus (<code>git checkout lab-1-solution</code> puis <code>docker compose up -d --build</code>).</p>
+</div>
+
+<h2>À retenir</h2>
+<div class="callout ok"><p>Un mock ne vérifie que ce que vous avez supposé. Les défauts de concurrence, de contraintes et de transactions n'existent qu'avec la vraie dépendance. <strong>Testcontainers rend ce test aussi simple à lancer qu'un test unitaire.</strong></p></div>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>

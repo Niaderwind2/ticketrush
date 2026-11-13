@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matin : penser la stratégie · Stratégie de tests</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">Stratégie de tests <span>· TicketRush</span></a>
+<a href="index.html">Accueil</a>
+<a href="contexte.html">TicketRush</a>
+<a href="matin.html" aria-current="page">Matin</a>
+<a href="lab-1.html">Lab 1</a>
+<a href="lab-2.html">Lab 2</a>
+<a href="ci.html">CI et agent IA</a>
+<a href="trame.html">Trame</a>
+<a href="fiche-memo.html">Fiche mémo</a>
+</nav></header>
+<main>
+
+<p class="kicker">Matin · 8h30-12h</p>
+<h1>Penser la stratégie</h1>
+<p class="lead">Avant d'écrire un test, on décide. Ce matin, on part de ce que vous vivez en entreprise, on pose les mots justes, puis on construit la stratégie de TicketRush sous contrainte.</p>
+
+<h2 id="panne">8h30 · Panne en direct</h2>
+<p class="big-quote">16 tests unitaires. Tous verts.<br>Ouverture des ventes : 300 fans, 200 places, 30 secondes.</p>
+<pre><code>==> Ce que les tests n'ont pas vu :
+{"reservationsActives": 229, "placesVenduesPlusieursFois": 25, "reservationsEnDoubleParDoubleClic": 19}</code></pre>
+<div class="callout"><p><strong>229 réservations actives pour 200 places.</strong> Comment est-ce possible avec des tests verts ? Gardez la question : on y répond cet après-midi, au lab 1.</p></div>
+
+<h2 id="debat">8h50 · Débat mouvant <span class="ia ia-0">IA 0 · sans IA</span></h2>
+<p>Pour chaque affirmation : placez-vous côté <strong>d'accord</strong> ou côté <strong>pas d'accord</strong>. Deux volontaires par camp argumentent avec un exemple tiré de leur entreprise. On peut changer de camp en cours de route.</p>
+<div class="statements">
+<div class="statement">100 % de couverture est un bon objectif.<small>Qu'est-ce que la couverture mesure, exactement ? Et qu'est-ce qu'elle ne mesure pas ?</small></div>
+<div class="statement">Les mocks rendent les tests inutiles.<small>Un mock vérifie votre hypothèse sur la dépendance, pas la dépendance elle-même.</small></div>
+<div class="statement">Avec l'IA, écrire des tests ne coûte plus rien, donc il faut tout tester.<small>Écrire ne coûte plus rien. Maintenir, exécuter et faire confiance, si.</small></div>
+<div class="statement">Les tests de bout en bout ne servent à rien.<small>Lents, instables... et pourtant les seuls à voir certains défauts.</small></div>
+<div class="statement">Le TDD, personne ne le fait vraiment.<small>Et si on l'avait fait sur TicketRush, la double vente serait-elle passée ?</small></div>
+</div>
+
+<h2 id="apport">9h30 · Apport flash (20 min)</h2>
+
+<h3>Politique, stratégie, plan : trois niveaux de décision</h3>
+<div class="grid">
+<div class="card"><p class="kicker">Politique de test</p><p><strong>L'entreprise.</strong> Pourquoi on teste, les principes communs, les exigences réglementaires. Change rarement.</p></div>
+<div class="card"><p class="kicker">Stratégie de test</p><p><strong>Le projet ou le produit.</strong> Quels risques, quels types et niveaux de test, quels outils, quels environnements, ce qu'on accepte de ne pas tester.</p></div>
+<div class="card"><p class="kicker">Plan de test</p><p><strong>Une version.</strong> Le périmètre, les tests prévus, le planning, les responsables, les critères d'entrée et de sortie.</p></div>
+</div>
+
+<h3>Le cycle de vie du test (STLC)</h3>
+<p>Analyse des exigences → planification → conception des cas de test → préparation de l'environnement et des données → exécution → clôture et bilan. En CI/CD, ce cycle ne disparaît pas : il se rejoue à chaque commit, en quelques minutes.</p>
+
+<h3>Types de tests et qualité (ISO/IEC 25010:2023)</h3>
+<p>On ne choisit pas un type de test au hasard : il protège une caractéristique de qualité.</p>
+<div class="table-wrap"><table>
+<tr><th>Caractéristique ISO 25010</th><th>Question</th><th>Types de tests</th></tr>
+<tr><td>Adéquation fonctionnelle</td><td>Fait-il ce qu'on attend ?</td><td>Unitaires, fonctionnels, acceptation, non-régression</td></tr>
+<tr><td>Efficacité de performance</td><td>Tient-il la charge, à quelle vitesse ?</td><td>Charge, stress, endurance</td></tr>
+<tr><td>Fiabilité</td><td>Que se passe-t-il quand une dépendance tombe ?</td><td>Résilience, injection de pannes, chaos</td></tr>
+<tr><td>Sécurité</td><td>Peut-on l'abuser ?</td><td>SAST, DAST, tests d'autorisation</td></tr>
+<tr><td>Compatibilité</td><td>Fonctionne-t-il avec les autres systèmes ?</td><td>Intégration, contrats d'API</td></tr>
+<tr><td>Capacité d'interaction</td><td>Est-il utilisable et accessible ?</td><td>Tests utilisateurs, accessibilité</td></tr>
+<tr><td>Maintenabilité</td><td>Peut-on le faire évoluer sans casser ?</td><td>Tests rapides et fiables, mutation testing, analyse statique</td></tr>
+<tr><td>Flexibilité, sûreté</td><td>Se déploie-t-il ailleurs ? Peut-il blesser quelqu'un ?</td><td>Tests de déploiement ; tests de sûreté pour les systèmes critiques</td></tr>
+</table></div>
+
+<h3>Trois formes de stratégie</h3>
+<div class="models">
+<div class="card"><p class="kicker">Pyramide</p><svg viewBox="0 0 200 150" role="img" aria-label="Pyramide"><polygon points="100,8 190,140 10,140" fill="none" stroke="currentColor" stroke-width="2"/>
+<line x1="72" y1="50" x2="128" y2="50" stroke="currentColor"/><line x1="44" y1="95" x2="156" y2="95" stroke="currentColor"/>
+<text x="100" y="40" text-anchor="middle" font-size="11" fill="currentColor">E2E</text><text x="100" y="80" text-anchor="middle" font-size="11" fill="currentColor">Intégration</text><text x="100" y="125" text-anchor="middle" font-size="11" fill="currentColor">Unitaires</text></svg><p>Beaucoup de tests unitaires rapides. Adaptée à un domaine riche en règles métier.</p></div>
+<div class="card"><p class="kicker">Trophée</p><svg viewBox="0 0 200 150" role="img" aria-label="Trophée"><path d="M80 10 H120 V30 H80 Z M55 32 H145 Q150 80 120 100 H80 Q50 80 55 32 Z M85 102 H115 V118 H85 Z M70 120 H130 V140 H70 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="100" y="24" text-anchor="middle" font-size="10" fill="currentColor">E2E</text><text x="100" y="66" text-anchor="middle" font-size="11" fill="currentColor">Intégration</text><text x="100" y="114" text-anchor="middle" font-size="9" fill="currentColor">Unit.</text><text x="100" y="134" text-anchor="middle" font-size="9" fill="currentColor">Statique</text></svg><p>Le gros de l'effort en intégration. Adaptée aux applications web où le risque est dans l'assemblage.</p></div>
+<div class="card"><p class="kicker">Honeycomb</p><svg viewBox="0 0 200 150" role="img" aria-label="Honeycomb"><polygon points="100,10 160,40 160,110 100,140 40,110 40,40" fill="none" stroke="currentColor" stroke-width="2"/>
+<line x1="40" y1="55" x2="160" y2="55" stroke="currentColor"/><line x1="40" y1="100" x2="160" y2="100" stroke="currentColor"/>
+<text x="100" y="40" text-anchor="middle" font-size="10" fill="currentColor">Intégré</text><text x="100" y="82" text-anchor="middle" font-size="11" fill="currentColor">Intégration</text><text x="100" y="122" text-anchor="middle" font-size="10" fill="currentColor">Détails d'impl.</text></svg><p>Pour les microservices : on teste surtout chaque service avec ses vraies dépendances.</p></div>
+</div>
+<div class="callout"><p><strong>La forme découle des risques et de l'architecture, pas l'inverse.</strong> La bonne question n'est pas « pyramide ou trophée ? », mais « où sont mes défauts probables, et quel test les attrape au meilleur coût ? »</p></div>
+
+<h3>Les doublures</h3>
+<div class="table-wrap"><table>
+<tr><th>Doublure</th><th>Ce que c'est</th><th>Ce qu'elle prouve</th></tr>
+<tr><td>Stub</td><td>Renvoie une réponse préparée</td><td>Le comportement de votre code pour cette réponse</td></tr>
+<tr><td>Mock</td><td>Vérifie qu'on l'a appelé comme prévu</td><td>Que votre code respecte <em>votre hypothèse</em> sur la dépendance</td></tr>
+<tr><td>Fake</td><td>Implémentation simplifiée (base en mémoire)</td><td>Un comportement plausible, mais pas les vraies contraintes</td></tr>
+<tr><td>Vraie dépendance en conteneur</td><td>PostgreSQL lancé par Testcontainers</td><td>Le vrai comportement : contraintes, transactions, concurrence</td></tr>
+</table></div>
+
+<h2 id="atelier">10h00 · Atelier risques sous contrainte</h2>
+<p>Équipes mixtes de 4. Rôles : <strong>animateur</strong>, <strong>scribe</strong>, <strong>gardien du temps</strong>, <strong>vérificateur IA</strong>. Relisez le <a href="contexte.html">contexte TicketRush</a>, puis tirez une carte.</p>
+
+<h3>Les cartes de contraintes</h3>
+<div class="grid">
+<div class="constraint"><strong>Pipeline limité à 8 minutes</strong>Au-delà, les développeurs contournent la CI. Tout ce qui est plus long tourne la nuit.</div>
+<div class="constraint"><strong>Aucun testeur dans l'équipe</strong>Les développeurs écrivent et maintiennent tous les tests. Personne ne fait de tests manuels.</div>
+<div class="constraint"><strong>Mise en production plusieurs fois par jour</strong>Pas de phase de recette. Ce qui passe la CI part en production.</div>
+<div class="constraint"><strong>Le prestataire de paiement n'a pas d'environnement de test</strong>Chaque appel réel débite une vraie carte.</div>
+<div class="constraint"><strong>Équipe de 3 développeurs juniors</strong>Ils découvrent les tests automatisés. Le temps de formation compte.</div>
+<div class="constraint"><strong>Concert de 60 000 places dans un mois</strong>La direction veut une garantie écrite sur la tenue en charge.</div>
+</div>
+
+<h3>Déroulé</h3>
+<div class="table-wrap"><table>
+<tr><th>Temps</th><th>Consigne</th><th>IA</th></tr>
+<tr><td class="time">20 min</td><td>Listez et cotez les 8 à 10 risques majeurs de TicketRush (probabilité × impact, de 1 à 3).</td><td><span class="ia ia-0">IA 0 · sans IA</span></td></tr>
+<tr><td class="time">35 min</td><td>Pour chaque risque : la caractéristique ISO 25010 concernée, le type et le niveau de test, la doublure ou la vraie dépendance, le moment dans le pipeline. Tenez compte de votre carte.</td><td><span class="ia ia-2">IA 2 · assistant</span></td></tr>
+<tr><td class="time">10 min</td><td>Écrivez ce que vous choisissez de <strong>ne pas</strong> tester, et pourquoi.</td><td><span class="ia ia-2">IA 2 · assistant</span></td></tr>
+</table></div>
+
+<h3>La matrice à remplir</h3>
+<div class="table-wrap"><table>
+<tr><th>Risque</th><th>P × I</th><th>ISO 25010</th><th>Type de test</th><th>Niveau</th><th>Doublure ou vraie dépendance</th><th>Quand</th></tr>
+<tr><td><em>Exemple : un tarif enfant appliqué en fosse</em></td><td>2 × 1</td><td>Adéquation fonctionnelle</td><td>Fonctionnel</td><td>Unitaire</td><td>Aucune</td><td>Chaque push</td></tr>
+<tr><td>…</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table></div>
+
+<h2 id="stagiaire">11h05 · L'IA comme stagiaire <span class="ia ia-3">IA 3 · libre</span></h2>
+<p>Demandez à l'assistant de votre choix :</p>
+<pre><code>Voici le contexte d'une application de billetterie : [collez le contexte TicketRush].
+Notre contrainte : [votre carte].
+Rédige la stratégie de test de cette application.</code></pre>
+<p>Comparez la réponse à votre matrice et notez :</p>
+<ul>
+<li>ce que l'IA a <strong>oublié</strong> et que vous aviez vu ;</li>
+<li>ce qu'elle a vu et que <strong>vous</strong> aviez oublié ;</li>
+<li>ce qu'elle <strong>affirme sans justification</strong> ;</li>
+<li>si elle a vraiment <strong>respecté votre contrainte</strong>.</li>
+</ul>
+
+<h2 id="revue">11h25 · Revue croisée <span class="ia ia-0">IA 0 · sans IA</span></h2>
+<p>Chaque équipe défend <strong>trois choix</strong> en 3 minutes. Une autre équipe la challenge en jouant un rôle tiré au sort :</p>
+<div class="grid">
+<div class="card"><h3>RSSI</h3><p>« Et les données personnelles dans vos tests ? Et la sécurité ? »</p></div>
+<div class="card"><h3>Product owner</h3><p>« Combien de temps ça coûte ? Qu'est-ce que je ne peux plus livrer ? »</p></div>
+<div class="card"><h3>SRE</h3><p>« Que se passe-t-il à 3 h du matin quand le paiement tombe ? »</p></div>
+<div class="card"><h3>Support client</h3><p>« Comment je sais qu'un client a été débité sans billet ? »</p></div>
+</div>
+
+</main>
+<footer>INF243 Stratégie de tests · MAALSI · CESI Rouen · Cas d'étude fictif.</footer>
+</body>
+</html>
