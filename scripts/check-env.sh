@@ -15,6 +15,7 @@ step "Construction et démarrage de TicketRush" "Envoyez la sortie de 'docker co
 step "L'API répond" "Le port 8080 est peut-être déjà utilisé" curl -fsS http://localhost:8080/health
 if command -v dotnet >/dev/null; then
   step "SDK .NET 10" "Installez le SDK .NET 10" sh -c "dotnet --list-sdks | grep -q '^10\.'"
+  step "Outils .NET (Stryker, pour le lab 2)" "Vérifiez votre connexion, puis relancez" dotnet tool restore
   step "Tests d'intégration avec Testcontainers" "Docker doit être démarré" dotnet test tests/TicketRush.IntegrationTests
 else
   echo "  SDK .NET absent : vous suivrez la piste « boîte noire » ou Codespaces (voir README)."

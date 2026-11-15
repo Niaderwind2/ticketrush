@@ -26,7 +26,7 @@
 
 <div class="callout"><p><strong>Objectif :</strong> un test qui échoue tant que deux clients peuvent obtenir la même place, et qui passe une fois le défaut corrigé. Choisissez votre piste : <strong>code</strong> (C#) ou <strong>boîte noire</strong> (n'importe quel langage).</p></div>
 
-<h2>Préparation (5 min)</h2>
+<h2>Préparation (faite à 13h08)</h2>
 <pre><code>git pull
 docker compose up -d --build --wait     # l'API répond sur http://localhost:8080
 dotnet test                             # piste code : tout est vert</code></pre>
@@ -44,7 +44,7 @@ dotnet test                             # piste code : tout est vert</code></pre
 </div>
 
 <div class="palier base">
-<h3>Socle · 2. Rouge : écrire le test qui prouve la double vente (20 min)</h3>
+<h3>Socle · 2. Rouge : écrire le test qui prouve la double vente (15 min)</h3>
 <p>Créez <code>tests/TicketRush.IntegrationTests/ConcurrencyTests.cs</code>. Inspirez-vous de <code>ReservationRepositoryTests.cs</code> : la classe <code>PostgresFixture</code> démarre un vrai PostgreSQL dans Docker.</p>
 <p>Le test : 20 clients réservent la <strong>même place</strong> en même temps. Attendu : 1 succès, 19 <code>SeatAlreadyTakenException</code>.</p>
 <pre><code>[Fact]

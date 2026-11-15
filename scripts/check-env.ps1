@@ -17,6 +17,7 @@ Step "L'API répond" { Invoke-RestMethod http://localhost:8080/health } "Le port
 $hasDotnet = $null -ne (Get-Command dotnet -ErrorAction SilentlyContinue)
 if ($hasDotnet) {
     Step "SDK .NET 10" { if (-not ((dotnet --list-sdks) -match '^10\.')) { throw "absent" } } "Installez le SDK .NET 10 : https://dotnet.microsoft.com/download"
+    Step "Outils .NET (Stryker, pour le lab 2)" { dotnet tool restore } "Vérifiez votre connexion, puis relancez"
     Step "Tests d'intégration avec Testcontainers" { dotnet test tests/TicketRush.IntegrationTests } "Docker doit être démarré ; envoyez la sortie au formateur"
 } else {
     Write-Host "  SDK .NET absent : vous suivrez la piste « boîte noire » ou l'environnement Codespaces (voir README)." -ForegroundColor Yellow
