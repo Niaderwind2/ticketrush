@@ -20,9 +20,9 @@
 </nav></header>
 <main>
 
-<p class="kicker">Après-midi · 14h10-15h00 · en binôme · <span class="ia ia-2">IA 2 · assistant</span></p>
+<p class="kicker">Après-midi · 14h10-15h00 · en binôme</p>
 <h1>Lab 2 : le tournoi des mutants</h1>
-<p class="lead">L'IA écrit des tests en quelques secondes. La couverture grimpe. Mais ces tests détectent-ils vraiment une erreur ? Le mutation testing répond : il introduit des bugs dans le code et regarde si vos tests les voient.</p>
+<p class="lead">Un collègue a fait écrire les tests du calcul de prix par un assistant. Vingt tests, tous verts, toutes les branches couvertes. Est-ce que ces tests détectent vraiment une erreur ? Le mutation testing répond : il introduit des bugs dans le code et regarde si les tests les voient.</p>
 
 <h2>Le principe</h2>
 <p>Stryker modifie le code, une petite erreur à la fois : un <code>&gt;=</code> devient <code>&gt;</code>, un <code>+</code> devient <code>-</code>, une constante change. Chaque version modifiée est un <strong>mutant</strong>.</p>
@@ -33,22 +33,21 @@
 <p>Le <strong>score de mutation</strong> est la part de mutants tués. C'est une mesure bien plus honnête que la couverture.</p>
 
 <h2>1. Mesurer le point de départ (5 min)</h2>
-<p>Le module <code>src/TicketRush.Domain/Pricing.cs</code> calcule les prix. Il n'a qu'un test, qui passe.</p>
+<p>Le module <code>src/TicketRush.Domain/Pricing.cs</code> calcule les prix. Ses tests sont dans <code>tests/TicketRush.UnitTests/PricingTests.cs</code> : une vingtaine, qui passent tous et couvrent toutes les branches. Lisez-les rapidement : auriez-vous accepté cette suite en revue de code ?</p>
 <pre><code>cd tests/TicketRush.UnitTests
 dotnet tool restore
 dotnet stryker</code></pre>
-<p>Notez le score affiché pour <code>Pricing.cs</code>, puis ouvrez le rapport HTML : chaque mutant survivant y est montré dans le code.</p>
+<p>Notez le score affiché pour <code>Pricing.cs</code> et annoncez-le au formateur : il est reporté au tableau.</p>
 
-<h2>2. Faire écrire les tests par l'IA (10 min) <span class="ia ia-2">IA 2 · assistant</span></h2>
-<p>Donnez <code>Pricing.cs</code> à votre assistant et demandez-lui des tests xUnit. Collez-les dans <code>PricingTests.cs</code>, vérifiez qu'ils passent, puis relancez Stryker.</p>
-<p>Annoncez votre score au formateur : il est reporté au tableau.</p>
+<h2>2. Lire le rapport (10 min)</h2>
+<p>Ouvrez le rapport HTML (<code>StrykerOutput/…/reports/mutation-report.html</code>). Chaque mutant survivant y est montré dans le code. Choisissez-en trois et, pour chacun, répondez en une phrase : quel bug réel ce mutant représente-t-il, et quel test existant aurait dû le voir ?</p>
 
 <h2>3. Le tournoi (25 min)</h2>
-<p>Objectif : tuer le plus de mutants survivants possible. À la main, ou en guidant l'IA avec le rapport Stryker. Pour chaque mutant tué, notez dans un fichier <code>notes.md</code> :</p>
+<p>Objectif : tuer le plus de mutants survivants possible, sans toucher à <code>Pricing.cs</code>. À la main, ou en guidant l'IA avec le rapport Stryker : donnez-lui le mutant précis et la règle métier, pas seulement le code. Pour chaque mutant tué, notez dans un fichier <code>notes.md</code> :</p>
 <ul>
 <li>le mutant (ligne, modification) ;</li>
-<li>pourquoi le test de l'IA ne le voyait pas ;</li>
-<li>ce que l'IA ne pouvait pas savoir sans vous (une règle métier, une frontière).</li>
+<li>pourquoi la suite du collègue ne le voyait pas ;</li>
+<li>la règle métier ou la frontière que votre test vérifie désormais.</li>
 </ul>
 <p>Rappel des règles métier : <a href="contexte.html#metier">contexte TicketRush</a>.</p>
 
