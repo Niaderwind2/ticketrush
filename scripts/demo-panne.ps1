@@ -1,4 +1,5 @@
-# Démo d'ouverture du cours (Windows / PowerShell) : la CI est verte, et pourtant...
+﻿# Démo d'ouverture du cours (Windows / PowerShell) : la CI est verte, et pourtant...
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "..")
 
