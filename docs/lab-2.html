@@ -52,12 +52,14 @@ dotnet stryker</code></pre>
 <p>Rappel des règles métier : <a href="contexte.html#metier">contexte TicketRush</a>.</p>
 
 <div class="palier avance">
-<h3>Palier avancé · Les frontières</h3>
-<p>Le early bird commence-t-il à 30 jours pile, ou au-delà ? Les frais à 4 billets sont-ils de 6 € ou plafonnés ? Écrivez un test par frontière, avec la valeur exacte attendue.</p>
+<h3>Palier avancé · Au-delà du prix</h3>
+<p>Plus aucun survivant utile dans <code>Pricing.cs</code> ? Étendez Stryker aux autres règles métier :</p>
+<pre><code>dotnet stryker -m "**/Hold.cs" -m "**/Quota.cs"</code></pre>
+<p>Un mutant survit encore. Quelle frontière personne n'a-t-il testée ? Écrivez le test qui le tue.</p>
 </div>
 <div class="palier expert">
-<h3>Palier expert · Les mutants qu'il vaut mieux laisser vivre</h3>
-<p>Certains mutants survivants ne valent pas un test : le texte d'un message d'erreur, par exemple. Lesquels ? Configurez Stryker pour les ignorer (<code>stryker-config.json</code>) et justifiez ce choix comme vous le feriez dans une stratégie de test.</p>
+<h3>Palier expert · Le mutation testing dans la stratégie</h3>
+<p>Certains mutants ne valent pas un test : le texte d'un message d'erreur, par exemple. Excluez-les dans <code>stryker-config.json</code>. Fixez ensuite un seuil <code>break</code> qui ferait échouer le build, et décidez à quel étage de la CI lancer Stryker. Écrivez ces trois choix comme vous les justifieriez dans une stratégie de test.</p>
 </div>
 
 <h2>4. Débrief (5 min)</h2>
