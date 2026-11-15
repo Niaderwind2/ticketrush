@@ -1,5 +1,6 @@
-# Vérifie que le poste est prêt pour le cours (Windows / PowerShell).
+﻿# Vérifie que le poste est prêt pour le cours (Windows / PowerShell).
 #   powershell -ExecutionPolicy Bypass -File scripts/check-env.ps1
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ok = $true
 function Step($label, [scriptblock]$test, $help) {
     Write-Host -NoNewline "  $label ... "
