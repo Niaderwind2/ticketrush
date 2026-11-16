@@ -83,7 +83,7 @@ public async Task Vingt_clients_sur_la_meme_place_une_seule_reservation_reussit(
 
 <div class="palier avance">
 <h3>Palier avancé · Rendre le test fiable</h3>
-<p>Un bug de concurrence ne se montre pas à chaque exécution. Votre test est-il rouge à <em>chaque</em> fois avant la correction ? Rendez-le fiable : libérez tous les clients au même instant (une barrière avec <code>TaskCompletionSource</code>), et répétez l'expérience sur plusieurs places (<code>[Theory]</code>). Puis faites la même chose pour le <strong>double clic</strong> : 5 requêtes simultanées avec la même clé d'idempotence ne doivent créer qu'une réservation.</p>
+<p>Un bug de concurrence ne se montre pas à chaque exécution. Votre test est-il rouge à <em>chaque</em> fois avant la correction ? Rendez-le fiable : libérez tous les clients au même instant (une barrière avec <code>TaskCompletionSource</code>), et répétez l'expérience sur plusieurs places (<code>[Theory]</code>). Puis faites la même chose pour le <strong>double-clic</strong> : 5 requêtes simultanées avec la même clé d'idempotence ne doivent créer qu'une réservation.</p>
 </div>
 
 <div class="palier expert">
