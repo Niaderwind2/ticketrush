@@ -56,6 +56,7 @@ Toute la journée sert à comprendre comment c'est possible, et comment l'évite
 ```
 src/TicketRush.Domain/        règles métier (prix, quota, blocage), service de réservation
 src/TicketRush.Api/           API HTTP + accès PostgreSQL en SQL direct
+  Infrastructure/schema.sql   schéma de la base, rejoué au démarrage de l'API et de chaque test d'intégration
 tools/TicketRush.FakePayment/ faux prestataire de paiement
 tests/TicketRush.UnitTests/   tests unitaires (xUnit, NSubstitute) + configuration Stryker
 tests/TicketRush.IntegrationTests/ tests avec un vrai PostgreSQL (Testcontainers)

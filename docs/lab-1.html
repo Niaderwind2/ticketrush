@@ -72,7 +72,8 @@ public async Task Vingt_clients_sur_la_meme_place_une_seule_reservation_reussit(
 <p>Indices progressifs, à ouvrir seulement si vous bloquez plus de 10 minutes :</p>
 <details><summary>Indice 1</summary><p>Le code applicatif ne peut pas garantir l'unicité seul : plusieurs instances de l'API peuvent tourner en même temps. Qui voit toutes les requêtes ?</p></details>
 <details><summary>Indice 2</summary><p>PostgreSQL sait garantir l'unicité avec un index unique. Il peut même être <em>partiel</em> : uniquement sur les réservations actives (<code>WHERE status IN ('Held', 'Paid')</code>).</p></details>
-<details><summary>Indice 3</summary><p>Ajoutez l'index dans <code>schema.sql</code>, puis interceptez l'erreur <code>PostgresErrorCodes.UniqueViolation</code> dans <code>PgReservationRepository.InsertAsync</code> pour la traduire en <code>SeatAlreadyTakenException</code>.</p></details>
+<details><summary>Indice 3</summary><p>Ajoutez l'index dans <code>schema.sql</code>, puis interceptez l'erreur <code>PostgresErrorCodes.UniqueViolation</code> dans <code>PgReservationRepository.InsertAsync</code> pour la traduire en <code>SeatAlreadyTakenException</code>. Le fichier <code>src/TicketRush.Api/Infrastructure/schema.sql</code> est rejoué à chaque démarrage : les tests d'intégration partent d'une base neuve et le voient tout de suite.</p></details>
+<p class="small">Vous voulez aussi essayer la correction sur l'API lancée avec Docker ? La base de démo contient déjà des places vendues deux fois, et PostgreSQL refusera de créer un index unique sur des données qui le violent. Repartez d'une base vide : <code>docker compose down</code> puis <code>docker compose up -d --build --wait</code>. C'est le problème classique d'une migration sur des données sales : notez-le pour votre bilan.</p>
 </div>
 
 <div class="palier base">
@@ -105,7 +106,7 @@ python boite-noire/double_vente.py</code></pre>
 </div>
 <div class="palier expert">
 <h3>Palier expert · Relire la correction</h3>
-<p>Faites équipe avec un binôme de la piste code : relisez sa correction et vérifiez que <strong>votre</strong> test passe dessus (<code>git checkout lab-1-solution</code> puis <code>docker compose up -d --build</code>).</p>
+<p>Faites équipe avec un binôme de la piste code : relisez sa correction et vérifiez que <strong>votre</strong> test passe dessus (<code>git checkout lab-1-solution</code>, <code>docker compose down</code>, puis <code>docker compose up -d --build --wait</code> : sans le <code>down</code>, la base garde les doublons de vos essais et l'API corrigée refuse de démarrer).</p>
 </div>
 
 <h2>À retenir</h2>
