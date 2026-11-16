@@ -43,13 +43,14 @@ dotnet stryker</code></pre>
 <p>Ouvrez le rapport HTML (<code>StrykerOutput/…/reports/mutation-report.html</code>). Chaque mutant survivant y est montré dans le code. Choisissez-en trois et, pour chacun, répondez en une phrase : quel bug réel ce mutant représente-t-il, et quel test existant aurait dû le voir ?</p>
 
 <h2>3. Le tournoi (25 min)</h2>
-<p>Objectif : tuer le plus de mutants survivants possible, sans toucher à <code>Pricing.cs</code>. À la main, ou en guidant l'IA avec le rapport Stryker : donnez-lui le mutant précis et la règle métier, pas seulement le code. Pour chaque mutant tué, notez dans un fichier <code>notes.md</code> :</p>
+<p>Objectif : tuer le plus de mutants survivants possible. Écrivez chaque test d'après la <strong>règle métier</strong> (ci-dessous), pas d'après le code. <strong>Attention : le code n'est peut-être pas juste.</strong> Si un test écrit d'après la règle échoue, ne le modifiez pas : vous avez trouvé un bug. Corrigez <code>Pricing.cs</code>, relancez les tests, et notez-le. À la main, ou en guidant l'IA avec le rapport Stryker : donnez-lui le mutant précis et la règle métier, pas seulement le code. Pour chaque mutant tué, notez dans un fichier <code>notes.md</code> :</p>
 <ul>
 <li>le mutant (ligne, modification) ;</li>
 <li>pourquoi la suite du collègue ne le voyait pas ;</li>
 <li>la règle métier ou la frontière que votre test vérifie désormais.</li>
 </ul>
-<p>Rappel des règles métier : <a href="contexte.html#metier">contexte TicketRush</a>.</p>
+<div class="callout"><p><strong>La règle métier du prix</strong> (elle fait foi, pas le code) : prix de base Fosse 65 €, catégorie 1 89 €, catégorie 2 49 € ; tarif réduit -20 %, enfant -50 % (interdit en fosse) ; frais de service 1,50 € par billet, plafonnés à 6 € par commande ; early bird : -10 % sur le sous-total si l'achat a lieu <strong>au moins</strong> 30 jours avant le concert ; les frais ne sont <strong>jamais</strong> remisés. Voir aussi le <a href="contexte.html#metier">contexte TicketRush</a>.</p></div>
+<p>Un mutant survivant vous dit : « aucun test ne remarquerait si cette ligne changeait ». Demandez-vous alors : laquelle des deux versions respecte la règle ?</p>
 
 <div class="palier avance">
 <h3>Palier avancé · Au-delà du prix</h3>
