@@ -50,7 +50,7 @@ public static class Pricing
     }
 
     public static bool IsEarlyBird(DateTimeOffset purchase, DateTimeOffset eventDate) =>
-        (eventDate - purchase).TotalDays > EarlyBirdDays;
+        (eventDate - purchase).TotalDays >= EarlyBirdDays;
 
     public static int ServiceFeesCents(int ticketCount) =>
         Math.Min(ticketCount * ServiceFeePerTicketCents, ServiceFeeCapCents);
@@ -63,10 +63,10 @@ public static class Pricing
             throw new ArgumentException("Impossible d'acheter un billet après le concert");
 
         var subtotal = lines.Sum(TicketPriceCents);
-        var fees = ServiceFeesCents(lines.Count);
         var discount = IsEarlyBird(purchase, eventDate)
-            ? (int)Math.Round((subtotal + fees) * EarlyBirdRate, MidpointRounding.AwayFromZero)
+            ? (int)Math.Round(subtotal * EarlyBirdRate, MidpointRounding.AwayFromZero)
             : 0;
+        var fees = ServiceFeesCents(lines.Count);
         return new PriceBreakdown(subtotal, discount, fees, subtotal - discount + fees);
     }
 }
