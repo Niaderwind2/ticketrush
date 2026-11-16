@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Npgsql;
 using TicketRush.Domain;
 
@@ -27,7 +28,24 @@ public sealed class PgReservationRepository(NpgsqlDataSource db) : IReservationR
     public Task<Reservation?> FindByIdAsync(Guid id) =>
         QuerySingleAsync("SELECT * FROM reservations WHERE id = $1", id);
 
+    // Optimisation : pendant l'ouverture des ventes, le comptage du quota sature la base.
+    // On garde le nombre de billets de chaque client en cache pendant 5 minutes,
+    // et on l'incrémente à chaque nouvelle réservation pour rester à jour.
+    private static readonly TimeSpan QuotaCacheDuration = TimeSpan.FromMinutes(5);
+    private readonly ConcurrentDictionary<(int EventId, string CustomerId), (int Count, DateTimeOffset CachedAt)> _quotaCache = new();
+
     public async Task<int> CountActiveForCustomerAsync(int eventId, string customerId)
+    {
+        var key = (eventId, customerId);
+        if (_quotaCache.TryGetValue(key, out var cached) && DateTimeOffset.UtcNow - cached.CachedAt < QuotaCacheDuration)
+            return cached.Count;
+
+        var count = await CountActiveForCustomerFromDatabaseAsync(eventId, customerId);
+        _quotaCache[key] = (count, DateTimeOffset.UtcNow);
+        return count;
+    }
+
+    private async Task<int> CountActiveForCustomerFromDatabaseAsync(int eventId, string customerId)
     {
         await using var cmd = db.CreateCommand(
             $"SELECT count(*)::int FROM reservations WHERE event_id = $1 AND customer_id = $2 AND status IN {ActiveStatuses}");
@@ -53,7 +71,9 @@ public sealed class PgReservationRepository(NpgsqlDataSource db) : IReservationR
         {
             await using var r = await cmd.ExecuteReaderAsync();
             await r.ReadAsync();
-            return Map(r);
+            var created = Map(r);
+            _quotaCache.AddOrUpdate((n.EventId, n.CustomerId), (1, DateTimeOffset.UtcNow), (_, c) => (c.Count + 1, c.CachedAt));
+            return created;
         }
         catch (PostgresException e) when (e.SqlState == PostgresErrorCodes.UniqueViolation)
         {
