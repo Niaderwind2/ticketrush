@@ -6,7 +6,6 @@ Le jour de l'ouverture des ventes, la CI est verte... et pourtant des places son
 Toute la journée sert à comprendre comment c'est possible, et comment l'éviter.
 
 > Support de cours : dossier [`docs/`](docs/index.html) (publiable avec GitHub Pages).
-> Présentation du cours (PDF) : [`docs/INF243-J1-presentation.pdf`](docs/INF243-J1-presentation.pdf).
 
 ## Avant le cours (obligatoire)
 
