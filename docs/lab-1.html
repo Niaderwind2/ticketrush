@@ -22,7 +22,7 @@
 
 <p class="kicker">Après-midi · 13h10-14h10 · en binôme</p>
 <h1>Lab 1 : ce que le mock ne voit pas</h1>
-<p class="lead">Les tests du service de réservation passent tous. Ils utilisent des mocks. On va montrer qu'ils ne peuvent pas voir la double vente, la prouver avec un vrai PostgreSQL, puis la corriger en TDD.</p>
+<p class="lead">Les tests du service de réservation passent tous. Ils utilisent des mocks. Nous allons montrer qu'ils ne peuvent pas voir la double vente, la prouver avec un vrai PostgreSQL, puis la corriger en TDD.</p>
 
 <div class="callout"><p><strong>Objectif :</strong> un test qui échoue tant que deux clients peuvent obtenir la même place, et qui passe une fois le défaut corrigé. Choisissez votre piste : <strong>code</strong> (C#) ou <strong>boîte noire</strong> (n'importe quel langage).</p></div>
 
@@ -101,7 +101,7 @@ public async Task Vingt_clients_sur_la_meme_place_une_seule_reservation_reussit(
 python boite-noire/double_vente.py</code></pre>
 </div>
 <div class="palier avance">
-<h3>Palier avancé · Le double clic</h3>
+<h3>Palier avancé · Le double-clic</h3>
 <p>Envoyez 5 requêtes simultanées avec le même en-tête <code>Idempotency-Key</code>. Combien de réservations sont créées ? Vérifiez avec <code>GET /admin/stats</code>.</p>
 </div>
 <div class="palier expert">
