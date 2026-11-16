@@ -22,7 +22,7 @@
 
 <p class="kicker">Après-midi · 14h10-15h00 · en binôme</p>
 <h1>Lab 2 : le tournoi des mutants</h1>
-<p class="lead">Un collègue a fait écrire les tests du calcul de prix par un assistant. Vingt tests, tous verts, toutes les branches couvertes. Est-ce que ces tests détectent vraiment une erreur ? Le mutation testing répond : il introduit des bugs dans le code et regarde si les tests les voient.</p>
+<p class="lead">Un collègue a fait écrire les tests du calcul de prix par un assistant. Vingt tests, tous verts, toutes les branches couvertes. Ces tests repèrent-ils vraiment une erreur ? Le mutation testing répond : il introduit des bugs dans le code et regarde si les tests les voient.</p>
 
 <h2>Le principe</h2>
 <p>Stryker modifie le code, une petite erreur à la fois : un <code>&gt;=</code> devient <code>&gt;</code>, un <code>+</code> devient <code>-</code>, une constante change. Chaque version modifiée est un <strong>mutant</strong>.</p>
@@ -56,7 +56,7 @@ dotnet stryker</code></pre>
 <h3>Palier avancé · Au-delà du prix</h3>
 <p>Plus aucun survivant utile dans <code>Pricing.cs</code> ? Étendez Stryker aux autres règles métier :</p>
 <pre><code>dotnet stryker -m "**/Hold.cs" -m "**/Quota.cs"</code></pre>
-<p>Un mutant survit encore. Quelle frontière personne n'a-t-il testée ? Écrivez le test qui le tue.</p>
+<p>Un mutant survit encore. Quelle frontière n'a jamais été testée ? Écrivez le test qui le tue.</p>
 </div>
 <div class="palier expert">
 <h3>Palier expert · Le mutation testing dans la stratégie</h3>
@@ -75,7 +75,7 @@ dotnet stryker</code></pre>
 </div>
 
 <h2>4. Débrief (5 min)</h2>
-<p>Les trois meilleurs scores expliquent leur méthode en deux minutes. À titre de repère, la branche <code>lab-2-solution</code> atteint 87,5 % : les seuls mutants survivants modifient des messages d'erreur.</p>
+<p>Les trois binômes aux meilleurs scores expliquent leur méthode en deux minutes. À titre de repère, la branche <code>lab-2-solution</code> atteint 87,5 % : les seuls mutants survivants modifient des messages d'erreur.</p>
 <div class="callout ok"><p><strong>À retenir :</strong> la couverture dit quelles lignes ont été exécutées, pas ce qui a été vérifié. Un test sans assertion précise couvre tout et ne prouve rien. Quand l'IA écrit vos tests, le mutation testing devient votre contrôle qualité.</p></div>
 
 </main>
